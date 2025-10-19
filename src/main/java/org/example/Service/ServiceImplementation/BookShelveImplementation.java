@@ -74,8 +74,15 @@ public class BookShelveImplementation implements BookShelveInterface {
         return shelf;
     }
 
+
     @Override
     public List<BookShelve> viewBookShelves(String userId) {
+
         return bookShelveRepository.findByUserId(userId);
+    }
+
+    @Override
+    public List<BookShelve> getShelvesByStatus(String userId, Status status) {
+        return bookShelveRepository.findByUserIdAndStatus(userId, status);
     }
 }
