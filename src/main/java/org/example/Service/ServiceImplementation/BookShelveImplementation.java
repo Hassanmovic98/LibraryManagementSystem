@@ -85,4 +85,6 @@ public class BookShelveImplementation implements BookShelveInterface {
     public List<BookShelve> getShelvesByStatus(String userId, Status status) {
         return bookShelveRepository.findByUserIdAndStatus(userId, status);
     }
+
+
 }
