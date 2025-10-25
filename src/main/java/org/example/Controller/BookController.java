@@ -1,51 +1,41 @@
 package org.example.Controller;
 
 import lombok.RequiredArgsConstructor;
-import org.example.DTO.Request.BookShelveRequest;
 import org.example.Model.Book;
-import org.example.Model.BookShelve;
-import org.example.Model.Status;
-import org.example.Repository.BookShelveRepository;
 import org.example.Service.ServiceInterface.BookInterface;
 import org.example.Service.ServiceInterface.BookShelveInterface;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.util.List;
 
+
 @RestController
-@RequestMapping
+@RequestMapping("/books")
 @RequiredArgsConstructor
 
 public class BookController {
 
+    private final BookInterface bookService;
+    private  final BookShelveInterface bookShelveInterface ;
 
-private final BookShelveInterface bookShelveService;
-
-
-
-    @PostMapping("/bookBorrow")
-    public ResponseEntity<BookShelve> borrowBook (@RequestBody String userId, @RequestParam String bookId){
-        BookShelve bookShelve = bookShelveService.bookShelve(userId,bookId);
-        return ResponseEntity.ok(bookShelve);
-
-}
-@PostMapping("/returnBook")
-    public ResponseEntity<BookShelve> returnBook(@RequestBody String userId, @RequestParam String bookId){
-    BookShelve bookShelve = bookShelveService.returnBook(userId,bookId);
-    return ResponseEntity.ok(bookShelve);
-}
-@GetMapping("/user/{userId}/bookShelves")
-    public ResponseEntity<List<BookShelve>> getAllUserShelve(@PathVariable String userId){
-        return ResponseEntity.ok(bookShelveService.viewBookShelves(userId));
-
-}
-@GetMapping("/user/{userId}/borrowed")
-    public ResponseEntity<List<BookShelve>> getBorrowedBooks(@PathVariable String userId) {
-        return ResponseEntity.ok(bookShelveService.getShelvesByStatus(userId, Status.BORROWED));
+    @PostMapping
+    public ResponseEntity<Book> addBook(@RequestBody Book book) {
+        Book savedBook = bookService.addBook(book);
+        return ResponseEntity.status(HttpStatus.CREATED).body(savedBook);
     }
-
+    @GetMapping
+    public ResponseEntity<Book>getBookById(@PathVariable String id) {
+        return bookService.getBookById(id)
+                .map(book -> ResponseEntity.ok(book))
+                .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+    }
+    @GetMapping
+    public ResponseEntity<List<Book>> getAllBooks() {
+        List<Book> books = bookService.getAllBooks();
+        return ResponseEntity.status(HttpStatus.OK).body(books);
+    }
 
 }
 
