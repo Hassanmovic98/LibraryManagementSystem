@@ -1,9 +1,11 @@
 package org.example.Controller;
 
+import lombok.RequiredArgsConstructor;
 import org.example.DTO.Request.CreateUserRequest;
 import org.example.DTO.Request.LoginRequest;
-import org.example.Service.ServiceImplementation.AuthorizationImplementation;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.example.DTO.Response.CreateUserResponse;
+import org.example.DTO.Response.LoginResponse;
+import org.example.Service.ServiceInterface.AuthorizationInterface;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -13,22 +15,22 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/LibraryManagementSystem")
+@RequiredArgsConstructor
 public class AuthorizationController {
 
-    @Autowired
-    private AuthorizationImplementation authorizationImplementation;
 
-    @PostMapping
-    public ResponseEntity<?> createUser(@RequestBody CreateUserRequest request){
-        return ResponseEntity.ok(authorizationImplementation.register(request));
+    private final AuthorizationInterface authroizationService;
+
+
+    @PostMapping("/register")
+    public ResponseEntity<CreateUserResponse> registerUser(@RequestBody CreateUserRequest request) {
+        CreateUserResponse response = authroizationService.register(request);
+        return ResponseEntity.ok(response);
     }
 
-    @PostMapping ("/login")
-    public ResponseEntity<?> login(@RequestBody LoginRequest request){
-        return ResponseEntity.ok(authorizationImplementation.login(request));
+    @PostMapping("/login")
+    public ResponseEntity<LoginResponse> loginUser(@RequestBody LoginRequest request) {
+        LoginResponse response = authroizationService.login(request);
+        return ResponseEntity.ok(response);
     }
-
-
-
-
 }
